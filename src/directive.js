@@ -3,6 +3,9 @@ angular.module('gettext').directive('translate', function (gettextCatalog, $inte
         transclude: 'element',
         priority: 900,
         compile: function (element, attrs, transclude) {
+            var trim = function (val) {
+                return val.toString().replace(/^([\s]*)|([\s]*)$/g, '');
+            };
             return function ($scope, $element) {
                 // Validate attributes
                 var assert = function (condition, missing, found) {
@@ -17,7 +20,7 @@ angular.module('gettext').directive('translate', function (gettextCatalog, $inte
                 var countFn = $parse(attrs.translateN);
 
                 transclude($scope, function (clone) {
-                    var input = $.trim(clone.html());
+                    var input = trim(clone.html());
                     clone.removeAttr('translate');
                     $element.replaceWith(clone);
 

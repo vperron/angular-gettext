@@ -1,6 +1,3 @@
-if (typeof jQuery === 'undefined') {
-  throw new Error('Angular-gettext depends on jQuery, be sure to include it!');
-}
 angular.module('gettext', []);
 angular.module('gettext').factory('gettext', function () {
   return function (str) {
@@ -61,6 +58,9 @@ angular.module('gettext').directive('translate', [
       transclude: 'element',
       priority: 900,
       compile: function (element, attrs, transclude) {
+        var trim = function (val) {
+          return val.toString().replace(/^([\s]*)|([\s]*)$/g, '');
+        };
         return function ($scope, $element) {
           var assert = function (condition, missing, found) {
             if (!condition) {
@@ -71,7 +71,7 @@ angular.module('gettext').directive('translate', [
           assert(!attrs.translateN || attrs.translatePlural, 'translate-plural', 'translate-n');
           var countFn = $parse(attrs.translateN);
           transclude($scope, function (clone) {
-            var input = $.trim(clone.html());
+            var input = trim(clone.html());
             clone.removeAttr('translate');
             $element.replaceWith(clone);
             return $scope.$watch(function () {
