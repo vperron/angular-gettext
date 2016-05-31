@@ -9,6 +9,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jscs");
     grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-ng-annotate");
+    grunt.loadNpmTasks("grunt-umd");
     grunt.loadNpmTasks("dgeni-alive");
 
     grunt.initConfig({
@@ -36,6 +37,17 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     "dist/angular-gettext.js": ["src/index.js", "src/*.js"]
+                }
+            }
+        },
+
+        umd: {
+            all: {
+                options: {
+                    src: "dist/angular-gettext.js",
+                    deps: {
+                        "default": ["angular"]
+                    }
                 }
             }
         },
@@ -167,7 +179,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("default", ["test"]);
-    grunt.registerTask("build", ["clean", "jshint", "jscs", "concat", "ngAnnotate", "uglify"]);
+    grunt.registerTask("build", ["clean", "jshint", "jscs", "concat", "umd:all", "ngAnnotate", "uglify"]);
     grunt.registerTask("test", ["build", "connect:e2e", "karma:unit", "karma:unit_nojquery", "karma:e2e", "watch:all"]);
     grunt.registerTask("test_unit", ["build", "karma:unit", "karma:unit_nojquery", "watch:unit"]);
     grunt.registerTask("test_e2e", ["build", "connect:e2e", "karma:e2e", "watch:e2e"]);
